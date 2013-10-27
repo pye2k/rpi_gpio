@@ -1,29 +1,30 @@
 #!/usr/bin/env python
 
-import RPi.GPIO as GPIO, time, os
+import wiringpi, time, os
 
-SLEEP_TIME = 0.5
+SLEEP_TIME = 1
 
-GPIO.setmode(GPIO.BCM)
+wiringpi.wiringPiSetupSys()
 
 PIR_PIN = 18
 GREEN_LED = 7
 RED_LED = 8
 
-GPIO.setup(PIR_PIN, GPIO.IN)
-GPIO.setup(GREEN_LED, GPIO.OUT)
-GPIO.setup(RED_LED, GPIO.OUT)
+wiringpi.pinMode(PIR_PIN, wiringpi.INPUT)
+wiringpi.pinMode(GREEN_LED, wiringpi.OUTPUT)
+wiringpi.pinMode(RED_LED, wiringpi.OUTPUT)
 
 try:
 
   while True:
-    if GPIO.input(PIR_PIN):
-      GPIO.output(GREEN_LED, True)
+    if wiringpi.digitalRead(PIR_PIN):
+      wiringpi.digitalWrite(GREEN_LED, wiringpi.HIGH)
       print("Motion detected!!!")
     else:
-      GPIO.output(GREEN_LED, False)
+      wiringpi.digitalWrite(GREEN_LED, wiringpi.LOW)
+      print("All quiet...")
 
     time.sleep(SLEEP_TIME)
 
 except KeyboardInterrupt:
-  GPIO.cleanup()
+  wiringpi.digitalWrite(GREEN_LED, wiringpi.LOW)
